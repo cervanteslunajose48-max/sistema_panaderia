@@ -3,7 +3,6 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
-
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\CategoryController;
@@ -33,44 +32,41 @@ Route::middleware('auth')->group(function () {
     Route::get('inventory/export', [InventoryController::class, 'exportCsv'])->name('inventory.export');
     Route::get('inventory/print', [InventoryController::class, 'print'])->name('inventory.print');
     Route::resource('inventory', InventoryController::class);
-    Route::post('inventory/{inventory}/toggle', [InventoryController::class, 'toggleStatus'])->name('inventory.toggle'); // Added by edit
+    Route::post('inventory/{inventory}/toggle', [InventoryController::class, 'toggleStatus'])->name('inventory.toggle');
+    
     Route::resource('categories', CategoryController::class);
     Route::post('categories/{category}/toggle', [CategoryController::class, 'toggleStatus'])->name('categories.toggle');
+    
     Route::resource('products', ProductController::class);
-    Route::post('products/{product}/toggle', [ProductController::class, 'toggleStatus'])->name('products.toggle'); // Added by edit
+    Route::post('products/{product}/toggle', [ProductController::class, 'toggleStatus'])->name('products.toggle');
     Route::post('products/{product}/upload-image', [ProductController::class, 'uploadImage'])->name('products.upload-image');
     Route::delete('product-images/{image}', [ProductController::class, 'deleteImage'])->name('product-images.delete');
     Route::post('product-images/{image}/set-primary', [ProductController::class, 'setPrimaryImage'])->name('product-images.set-primary');
 
+    // Suppliers
+    Route::resource('suppliers', SupplierController::class);
+    Route::post('suppliers/{supplier}/toggle', [SupplierController::class, 'toggleStatus'])->name('suppliers.toggle');
 
-    // Inventory & Suppliers // Added by edit
-    Route::resource('suppliers', SupplierController::class); // Modified by edit (moved and namespace removed)
-    Route::post('suppliers/{supplier}/toggle', [SupplierController::class, 'toggleStatus'])->name('suppliers.toggle'); // Added by edit
-
-    Route::get('supplies/search', [SupplyController::class, 'search'])->name('supplies.search'); // Added for Recipe Autocomplete
-    Route::resource('supplies', SupplyController::class); // Modified by edit (moved and namespace removed)
-    Route::post('supplies/{supply}/toggle', [SupplyController::class, 'toggleStatus'])->name('supplies.toggle'); // Added by edit
-
-    Route::resource('warehouses', \App\Http\Controllers\WarehouseController::class)->middleware(['permission:manage inventory']);
-
-    Route::resource('production', ProductionController::class)->only(['create', 'store', 'index']); // Added index // Modified by edit
-
-
-    // Clients & Configuration (Phase 10)
-    Route::resource('customers', CustomerController::class); // Modified by edit (namespace removed)
-    Route::post('customers/{customer}/toggle', [CustomerController::class, 'toggleStatus'])->name('customers.toggle'); // Added by edit
-
-    Route::get('settings', [SettingController::class, 'index'])->name('settings.index'); // Modified by edit (namespace removed)
-    Route::post('settings', [SettingController::class, 'update'])->name('settings.update'); // Modified by edit (namespace removed)
-
-    // Production & Supplies // This section is now partially redundant due to reordering above.
-    // The original lines below are removed as they are replaced/moved by the edit.
-    // Route::resource('suppliers', \App\Http\Controllers\SupplierController::class)->middleware(['permission:manage inventory']); // Removed by edit
-    // Route::resource('supplies', SupplyController::class)->middleware(['permission:manage inventory']); // Removed by edit
+    // Supplies
+    Route::get('supplies/search', [SupplyController::class, 'search'])->name('supplies.search');
+    Route::resource('supplies', SupplyController::class);
+    Route::post('supplies/{supply}/toggle', [SupplyController::class, 'toggleStatus'])->name('supplies.toggle');
     Route::post('supplies/{supply}/restock', [SupplyController::class, 'restock'])
         ->middleware(['permission:manage inventory'])
         ->name('supplies.restock');
 
+    // Warehouses
+    Route::resource('warehouses', \App\Http\Controllers\WarehouseController::class)->middleware(['permission:manage inventory']);
+    Route::post('warehouses/{warehouse}/toggle', [\App\Http\Controllers\WarehouseController::class, 'toggleStatus'])->name('warehouses.toggle');
+
+    // Clients & Configuration
+    Route::resource('customers', CustomerController::class);
+    Route::post('customers/{customer}/toggle', [CustomerController::class, 'toggleStatus'])->name('customers.toggle');
+
+    Route::get('settings', [SettingController::class, 'index'])->name('settings.index');
+    Route::post('settings', [SettingController::class, 'update'])->name('settings.update');
+
+    // Recipes
     Route::resource('recipes', RecipeController::class)->middleware(['permission:manage production']);
     Route::post('recipes/{recipe}/duplicate', [RecipeController::class, 'duplicate'])
         ->middleware(['permission:manage production'])
@@ -81,17 +77,9 @@ Route::middleware('auth')->group(function () {
     Route::post('users/{user}/toggle', [\App\Http\Controllers\UserController::class, 'toggleStatus'])->middleware(['role:admin'])->name('users.toggle');
 
     // Reports (Manager & Admin)
-    Route::get('reports', [\App\Http\Controllers\ReportController::class, 'index'])
-        ->middleware(['permission:view reports'])
-        ->name('reports.index');
-
-    Route::get('reports/production/export', [\App\Http\Controllers\ReportController::class, 'exportProductionCsv'])
-        ->middleware(['permission:view reports'])
-        ->name('reports.production.export');
-
-    Route::get('reports/production', [\App\Http\Controllers\ReportController::class, 'production'])
-        ->middleware(['permission:view reports'])
-        ->name('reports.production');
+    Route::get('reports', [\App\Http\Controllers\ReportController::class, 'index'])->middleware(['permission:view reports'])->name('reports.index');
+    Route::get('reports/production/export', [\App\Http\Controllers\ReportController::class, 'exportProductionCsv'])->middleware(['permission:view reports'])->name('reports.production.export');
+    Route::get('reports/production', [\App\Http\Controllers\ReportController::class, 'production'])->middleware(['permission:view reports'])->name('reports.production');
 
     // Production (Baker & Admin)
     Route::get('production', [ProductionController::class, 'create'])->middleware(['permission:manage production'])->name('production.create');
@@ -105,10 +93,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/orders/{order}/ticket', [\App\Http\Controllers\TicketController::class, 'show'])->name('orders.ticket');
     Route::resource('orders', \App\Http\Controllers\OrderController::class)->only(['index', 'show']);
 
-    // Suppliers
-    Route::resource('suppliers', \App\Http\Controllers\SupplierController::class);
-    Route::post('suppliers/{supplier}/toggle', [\App\Http\Controllers\SupplierController::class, 'toggleStatus'])->name('suppliers.toggle');
-
     // Purchases
     Route::resource('purchases', \App\Http\Controllers\PurchaseController::class);
     Route::post('purchases/{purchase}/receive', [\App\Http\Controllers\PurchaseController::class, 'receive'])->name('purchases.receive');
@@ -117,20 +101,11 @@ Route::middleware('auth')->group(function () {
     Route::get('inventory/adjustments/create', [\App\Http\Controllers\InventoryAdjustmentController::class, 'create'])->name('inventory.adjustments.create');
     Route::post('inventory/adjustments', [\App\Http\Controllers\InventoryAdjustmentController::class, 'store'])->name('inventory.adjustments.store');
 
-    // Warehouses
-    Route::resource('warehouses', \App\Http\Controllers\WarehouseController::class);
-    Route::post('warehouses/{warehouse}/toggle', [\App\Http\Controllers\WarehouseController::class, 'toggleStatus'])->name('warehouses.toggle');
-
-    // Supplies
-    Route::resource('supplies', SupplyController::class);
-    Route::post('supplies/{supply}/toggle', [SupplyController::class, 'toggleStatus'])->name('supplies.toggle');
-
-    // Cash Registers (Phase 12)
+    // Cash Registers
     Route::resource('cash-registers', \App\Http\Controllers\CashRegisterController::class);
     Route::post('cash-registers/{cash_register}/close', [\App\Http\Controllers\CashRegisterController::class, 'close'])->name('cash-registers.close');
     Route::post('cash-registers/{cash_register}/movement', [\App\Http\Controllers\CashRegisterController::class, 'storeMovement'])->name('cash-registers.movement');
 });
-
 
 // Product Transformations
 Route::get('inventory/transformations/create', [\App\Http\Controllers\ProductTransformationController::class, 'create'])->name('inventory.transformations.create');
