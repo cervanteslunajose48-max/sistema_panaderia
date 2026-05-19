@@ -1,0 +1,419 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* CSS Custom Properties for Theme */
+:root {
+    --color-bakery-gold: #D4A373;
+    --color-bakery-gold-light: #E9C46A;
+    --color-bakery-cream: #FAEDCD;
+    --color-bakery-dark: #3E2723;
+    --color-bakery-peach: #FFBB98;
+    --color-bakery-orange: #F4A261;
+
+    --shadow-soft: 0 2px 15px rgba(0, 0, 0, 0.08);
+    --shadow-glow: 0 0 20px rgba(212, 163, 115, 0.3);
+
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Global Base Styles */
+@layer base {
+    * {
+        @apply transition-colors duration-200;
+    }
+
+    body {
+        @apply font-sans antialiased;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        @apply font-display;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+        @apply bg-gray-100;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        @apply bg-bakery-gold-light rounded-full;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        @apply bg-bakery-gold;
+    }
+}
+
+@layer components {
+
+    /* ========= Modern Cards ========= */
+    .card-modern {
+        @apply bg-white rounded-2xl shadow-soft p-6 hover:shadow-lg transition-shadow duration-300;
+    }
+
+    .card-elevated {
+        @apply bg-white rounded-3xl shadow-lg p-6 hover:shadow-xl transition-all duration-300 hover:-translate-y-1;
+    }
+
+    /* Glassmorphism Cards - Enhanced */
+    .glass-card {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+        @apply transition-all duration-300;
+    }
+
+    .glass-card-white {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+        @apply transition-all duration-300;
+    }
+
+    .glass-card-gold {
+        background: rgba(212, 163, 115, 0.1);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(212, 163, 115, 0.2);
+    }
+
+    /* ========= Modern Buttons ========= */
+    .btn-primary {
+        @apply bg-bakery-gold hover:bg-bakery-gold-dark text-white font-semibold py-2.5 px-6 rounded-xl shadow-soft hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5;
+    }
+
+    .btn-secondary {
+        @apply bg-white hover:bg-gray-50 text-bakery-dark border-2 border-bakery-gold font-semibold py-2.5 px-6 rounded-xl transition-all duration-300 hover:shadow-soft;
+    }
+
+    .btn-success {
+        @apply bg-bakery-green hover:bg-bakery-green-light text-white font-semibold py-2.5 px-6 rounded-xl shadow-soft hover:shadow-lg transition-all duration-300;
+    }
+
+    .btn-danger {
+        @apply bg-bakery-red hover:bg-bakery-red-light text-white font-semibold py-2.5 px-6 rounded-xl shadow-soft hover:shadow-lg transition-all duration-300;
+    }
+
+    .btn-icon {
+        @apply p-2.5 rounded-full hover:bg-opacity-10 transition-all duration-200;
+    }
+
+    /* ========= Modern Inputs ========= */
+    .input-modern {
+        @apply w-full rounded-xl border-gray-300 focus:border-bakery-gold focus:ring focus:ring-bakery-gold focus:ring-opacity-30 transition-all duration-200;
+    }
+
+    .input-with-icon {
+        @apply pl-12 input-modern;
+    }
+
+    /* ========= Badges ========= */
+    .badge {
+        @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold;
+    }
+
+    .badge-success {
+        @apply bg-green-100 text-green-800;
+    }
+
+    .badge-danger {
+        @apply bg-red-100 text-red-800;
+    }
+
+    .badge-warning {
+        @apply bg-yellow-100 text-yellow-800;
+    }
+
+    .badge-info {
+        @apply bg-blue-100 text-blue-800;
+    }
+
+    .badge-bakery {
+        @apply bg-bakery-peach bg-opacity-30 text-bakery-dark;
+    }
+
+    /* ========= Tables ========= */
+    .table-modern {
+        @apply min-w-full divide-y divide-gray-200;
+    }
+
+    .table-modern thead {
+        @apply bg-gray-50;
+    }
+
+    .table-modern th {
+        @apply px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider;
+    }
+
+    .table-modern tbody {
+        @apply bg-white divide-y divide-gray-200;
+    }
+
+    .table-modern tbody tr {
+        @apply hover:bg-gray-50 transition-colors duration-150;
+    }
+
+    .table-modern td {
+        @apply px-6 py-4 whitespace-nowrap;
+    }
+
+    /* Tablas responsivas con scroll horizontal en móviles */
+    .table-responsive {
+        @apply overflow-x-auto -mx-4 sm:mx-0 rounded-xl;
+    }
+
+    .table-responsive table {
+        @apply min-w-full;
+    }
+
+    /* ========= Loading States ========= */
+    .skeleton {
+        @apply animate-pulse bg-gray-200 rounded;
+    }
+
+    .loader-spinner {
+        @apply inline-block w-6 h-6 border-3 border-bakery-gold border-t-transparent rounded-full animate-spin;
+    }
+
+    /* ========= Tooltips ========= */
+    .tooltip {
+        @apply invisible absolute;
+    }
+
+    .has-tooltip:hover .tooltip {
+        @apply visible z-50;
+    }
+
+    /* ========= Progress Bars ========= */
+    .progress-bar {
+        @apply w-full bg-gray-200 rounded-full h-3 overflow-hidden;
+    }
+
+    .progress-fill {
+        @apply h-full bg-gradient-to-r from-bakery-gold to-bakery-orange rounded-full transition-all duration-500;
+    }
+
+    /* ========= Gradient Backgrounds ========= */
+    .gradient-bakery-bg {
+        background: linear-gradient(135deg, #FFF8F0 0%, #FFD7A8 100%);
+        position: relative;
+    }
+
+    .gradient-bakery-bg::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-image:
+            radial-gradient(circle at 20% 50%, rgba(244, 162, 97, 0.1) 0%, transparent 50%),
+            radial-gradient(circle at 80% 80%, rgba(233, 196, 106, 0.1) 0%, transparent 50%);
+        pointer-events: none;
+    }
+
+    .gradient-gold {
+        @apply bg-gradient-to-r from-bakery-gold to-bakery-gold-light;
+    }
+
+    .gradient-peach {
+        @apply bg-gradient-to-r from-bakery-peach to-bakery-orange;
+    }
+
+    /* ========= Mobile Utilities ========= */
+    .btn-touch {
+        @apply min-h-[44px] min-w-[44px];
+    }
+
+    .mobile-icon-only span {
+        @apply hidden sm:inline;
+    }
+
+    /* ========= Animations ========= */
+    .animate-fade-in {
+        animation: fadeIn 0.3s ease-in-out;
+    }
+
+    .animate-slide-up {
+        animation: slideUp 0.4s ease-out;
+    }
+
+    @keyframes slideUp {
+        from {
+            transform: translateY(20px);
+            opacity: 0;
+        }
+
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+
+    /* ========= Hover Effects ========= */
+    .hover-lift {
+        @apply transition-transform duration-300 hover:-translate-y-1;
+    }
+
+    .hover-glow {
+        @apply transition-shadow duration-300 hover:shadow-glow;
+    }
+}
+
+@layer utilities {
+
+    /* ========= Spacing ========= */
+    .safe-padding {
+        @apply px-4 sm:px-6 lg:px-8;
+    }
+
+    /* ========= Scroll ========= */
+    .smooth-scroll {
+        @apply overflow-y-auto;
+        scroll-behavior: smooth;
+    }
+
+    .hide-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+
+    .hide-scrollbar::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* ========= Bakery Color Utilities ========= */
+    .bg-bakery-peach {
+        background-color: #FFBB98;
+    }
+
+    .bg-bakery-orange {
+        background-color: #F4A261;
+    }
+
+    .bg-bakery-gold {
+        background-color: #E9C46A;
+    }
+
+    .bg-bakery-vanilla {
+        background-color: #FFE5B4;
+    }
+
+    .bg-bakery-coral {
+        background-color: #FCA17D;
+    }
+
+    .text-bakery-peach {
+        color: #FFBB98;
+    }
+
+    .text-bakery-orange {
+        color: #F4A261;
+    }
+
+    .text-bakery-gold {
+        color: #E9C46A;
+    }
+
+    .text-bakery-vanilla {
+        color: #FFE5B4;
+    }
+
+    .text-bakery-coral {
+        color: #FCA17D;
+    }
+
+    /* ========= Text Utilities ========= */
+    .text-balance {
+        text-wrap: balance;
+    }
+}
+
+/* ========= Print Utilities ========= */
+@media print {
+    /* Reset layout for printing */
+    body, html {
+        height: auto !important;
+        overflow: visible !important;
+        background: white !important;
+    }
+
+    /* Hide UI elements */
+    .no-print, 
+    nav, 
+    aside, 
+    header, 
+    #sidebar, 
+    #sidebar-overlay,
+    .btn-secondary,
+    .btn-primary {
+        display: none !important;
+    }
+
+    /* Reset Main Content Wrapper */
+    main {
+        overflow: visible !important;
+        height: auto !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        display: block !important;
+    }
+
+    /* Target specific printable area if exists */
+    .printable-area {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        margin: 0;
+        padding: 20px;
+        background: white;
+        z-index: 9999;
+        border: none !important;
+        box-shadow: none !important;
+    }
+    
+    /* Ensure text colors print correctly */
+    * {
+        color: black !important;
+        text-shadow: none !important;
+    }
+    
+    /* Specific overrides for bakery theme colors in print */
+    .text-bakery-gold, .text-bakery-dark {
+        color: #000 !important;
+    }
+
+    /* Cancel any flex/grid constraints that might clip content */
+    .flex-1, .min-h-screen {
+        display: block !important;
+        height: auto !important;
+        overflow: visible !important;
+    }
+}
